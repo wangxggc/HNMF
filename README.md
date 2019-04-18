@@ -91,4 +91,6 @@ python main_rerun.py \
 #docNUM
 Word1 Word2 ...
 ```
-
+### Demo
+![](https://raw.githubusercontent.com/wangxggc/HNMF/master/Demo1.tiff)
+![](https://raw.githubusercontent.com/wangxggc/HNMF/master/Demo2.jpg)
