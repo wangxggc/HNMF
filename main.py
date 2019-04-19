@@ -147,6 +147,11 @@ def updateV(session, model, layer, epoch, num_steps, lr, toyD, D, Us, Vs):
         v_grad, loss = session.run([model.v_grads[layer], model.losses[layer]], feed_dict=feed_dict)
         scale = scale_grad(Vs[-1], v_grad, lr)
         Vs[-1] -= v_grad * lr * scale
+        
+        sparse_v_grad = np.zeros_like(Vs[-1], dtype=np.float32)
+        sparse_v_grad[Vs[-1] > 0] = 0.0001
+        Vs[-1] -= sparse_v_grad * lr
+        
         Vs[-1][Vs[-1] < 0.] = 0.
         print("\r" + log_format.format(layer, epoch, "v", n, loss, scale)),
         sys.stdout.flush()
