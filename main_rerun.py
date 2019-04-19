@@ -115,7 +115,7 @@ def updateU(session, model, layer, epoch, num_steps, lr, toyD, D, Us, Vs):
     print ("")
 
 
-def updateV(session, model, layer, epoch, num_steps, lr, toyD, D, Us, Vs):
+def updateV(session, model, layer, epoch, num_steps, lr, toyD, D, Us, Vs, beta):
     log_format = "Layer {0: <5d}  epoch {1: <8}  update-{2}: step {3: <8}  loss {4:.6f}, scale {5:.6f}"
     for n in range(num_steps):
         feed_dict = {
@@ -137,7 +137,7 @@ def updateV(session, model, layer, epoch, num_steps, lr, toyD, D, Us, Vs):
         Vs[-1] -= v_grad * lr * scale
         
         sparse_v_grad = np.zeros_like(Vs[-1], dtype=np.float32)
-        sparse_v_grad[Vs[-1] > 0] = 0.0001
+        sparse_v_grad[Vs[-1] > 0] = beta
         Vs[-1] -= sparse_v_grad * lr
         
         Vs[-1][Vs[-1] < 0.] = 0.
