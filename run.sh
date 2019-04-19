@@ -18,7 +18,8 @@ CUDA_VISIBLE_DEVICES="0" python main.py \
     --lr=0.001 \
     --a=0.9 \
     --a0=1. \
-    --a1=1. > ${OUT_DIR}/log.txt
+    --a1=1. \
+    --b=0.0001 > ${OUT_DIR}/log.txt
 cp run.sh ${OUT_DIR}
 cd ${OUT_DIR}
 SCRIPT=${ROOT}/topic.py
