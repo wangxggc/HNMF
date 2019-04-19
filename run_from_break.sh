@@ -20,7 +20,8 @@ CUDA_VISIBLE_DEVICES="0" python main_rerun.py \
     --lr=0.002 \
     --a=0.9 \
     --a0=1. \
-    --a1=1. > ${OUT_DIR}/log.re.txt
+    --a1=1. \
+    --b=0.0001 > ${OUT_DIR}/log.re.txt
 cp run.sh ${OUT_DIR}
 cd ${OUT_DIR}
 SCRIPT=/data1/qspace/kanowang/UserProfile/TopicModel/03_HSOC/topic.py
