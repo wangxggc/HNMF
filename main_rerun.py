@@ -135,6 +135,11 @@ def updateV(session, model, layer, epoch, num_steps, lr, toyD, D, Us, Vs):
         v_grad, loss = session.run([model.v_grads[layer], model.losses[layer]], feed_dict=feed_dict)
         scale = scale_grad(Vs[-1], v_grad, lr)
         Vs[-1] -= v_grad * lr * scale
+        
+        sparse_v_grad = np.zeros_like(Vs[-1], dtype=np.float32)
+        sparse_v_grad[Vs[-1] > 0] = 0.0001
+        Vs[-1] -= sparse_v_grad * lr
+        
         Vs[-1][Vs[-1] < 0.] = 0.
         print("\r" + log_format.format(layer, epoch, "v", n, loss, scale)),
         sys.stdout.flush()
@@ -152,6 +157,7 @@ if __name__ == "__main__":
     parser.add_argument("--a", type=float, help="parameter alpha")
     parser.add_argument("--a0", type=float, help="parameter alpha0")
     parser.add_argument("--a1", type=float, help="parameter alpha1")
+    parser.add_argument("--b", type=float, help="parameter beta")
     parser.add_argument("--epoch", type=int, help="epoch per layer")
     parser.add_argument("--in_epoch", type=int, help="20")
     parser.add_argument("--min_hold", type=int, help="min hold for words")
@@ -220,7 +226,7 @@ if __name__ == "__main__":
         for epoch in range(parser.epoch):
             # update
             updateU(sess, model, layer, epoch, parser.in_epoch, parser.lr, toy_docs_mat, docs_mat, Us, Vs)
-            updateV(sess, model, layer, epoch, parser.in_epoch, parser.lr, toy_docs_mat, docs_mat, Us, Vs)
+            updateV(sess, model, layer, epoch, parser.in_epoch, parser.lr, toy_docs_mat, docs_mat, Us, Vs, parser.b)
             # saving
             save_mat(parser.save_dir + "U-%d.txt" % layer, Us[-1])
             save_mat(parser.save_dir + "V-%d.txt" % layer, Vs[-1])
